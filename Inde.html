@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Recipe Creator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('/api/placeholder/1600/900');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 2rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Random Recipe Creator</h1>
+        <div class="form-group">
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" required>
+        </div>
+        <div class="form-group">
+            <label for="recipeType">Recipe Type:</label>
+            <select id="recipeType">
+                <option value="Main Dish">Main Dish</option>
+                <option value="Salad">Salad</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Drink">Drink</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="mainIngredient">Main Ingredient:</label>
+            <input type="text" id="mainIngredient" required>
+        </div>
+        <button id="submitBtn" style="display: none;">Generate Recipe</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // The JavaScript code remains unchanged
+        const apiKeyInput = document.getElementById('apiKey');
+        const recipeTypeSelect = document.getElementById('recipeType');
+        const mainIngredientInput = document.getElementById('mainIngredient');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultDiv = document.getElementById('result');
+
+        function checkInputs() {
+            if (apiKeyInput.value && mainIngredientInput.value) {
+                submitBtn.style.display = 'block';
+            } else {
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        apiKeyInput.addEventListener('input', checkInputs);
+        mainIngredientInput.addEventListener('input', checkInputs);
+
+        submitBtn.addEventListener('click', generateRecipe);
+
+        function generateRecipe() {
+            const apiKey = apiKeyInput.value;
+            const recipeType = recipeTypeSelect.value;
+            const mainIngredient = mainIngredientInput.value;
+
+            // In a real application, you would make an API call here.
+            // For this example, we'll simulate an API response.
+            simulateAPICall(apiKey, recipeType, mainIngredient)
+                .then(recipe => displayRecipe(recipe))
+                .catch(error => {
+                    resultDiv.innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        function simulateAPICall(apiKey, recipeType, mainIngredient) {
+            return new Promise((resolve, reject) => {
+                // Simulate API delay
+                setTimeout(() => {
+                    if (apiKey !== 'demo123') {
+                        reject(new Error('Invalid API key'));
+                    } else {
+                        const recipe = {
+                            name: `${mainIngredient.charAt(0).toUpperCase() + mainIngredient.slice(1)} ${recipeType}`,
+                            ingredients: [
+                                `2 cups ${mainIngredient}`,
+                                '1 cup water',
+                                '1 tablespoon olive oil',
+                                'Salt and pepper to taste'
+                            ],
+                            steps: [
+                                `Prepare the ${mainIngredient}`,
+                                'Mix all ingredients in a bowl',
+                                'Cook for 20 minutes',
+                                'Serve and enjoy!'
+                            ]
+                        };
+                        resolve(recipe);
+                    }
+                }, 1000);
+            });
+        }
+
+        function displayRecipe(recipe) {
+            let html = `
+                <h2>${recipe.name}</h2>
+                <h3>Ingredients:</h3>
+                <ul>
+                    ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                </ul>
+                <h3>Steps:</h3>
+                <ol>
+                    ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+                </ol>
+            `;
+            resultDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
